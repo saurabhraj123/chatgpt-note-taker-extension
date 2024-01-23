@@ -1,0 +1,29 @@
+:root {
+  --container-width: 400px;
+}
+
+.container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--container-width);
+  background-color: white;
+  border-radius: 10px 0 0 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease-in-out;
+  transform: translateX(var(--container-width));
+}
+
+.containerExpanded {
+  transform: translateX(-1 * var(--container-width));
+}
+
+.toggleIcon {
+  border: 1px solid black;
+  position: absolute;
+  right: 102%;
+  top: 49%;
+  background: red;
+  cursor: pointer;
+}
