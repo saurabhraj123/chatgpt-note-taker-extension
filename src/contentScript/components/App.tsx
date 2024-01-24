@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import classNames from "classnames";
 
 /** Internal */
+import TextSelectionMenu from "./TextSelectionMenu/TextSelectionMenu";
 import classes from "./App.module.css";
 
 const App: React.FC<{}> = () => {
@@ -16,14 +17,25 @@ const App: React.FC<{}> = () => {
     [classes.containerExpanded]: isEditorExpanded,
   });
 
+  const handleClickCopy = (e: MouseEvent) => {
+    console.log("Copy");
+    e.stopPropagation();
+  };
+
   return (
-    <div className={containerClasses}>
-      <div className={classes.toggleIcon} onClick={toggleEditorVisibility}>
-        {isEditorExpanded ? "Close" : "Open"}
+    <>
+      <div className={containerClasses}>
+        <div className={classes.toggleIcon} onClick={toggleEditorVisibility}>
+          {isEditorExpanded ? "Close" : "Open"}
+        </div>
       </div>
 
-      <div>Editor</div>
-    </div>
+      <TextSelectionMenu
+        onClickCopy={handleClickCopy}
+        onClickImport={() => {}}
+        onClickOpenNotebook={() => {}}
+      />
+    </>
   );
 };
 
