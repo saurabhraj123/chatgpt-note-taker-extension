@@ -14,13 +14,12 @@ const TextSelectionMenu = ({
   onClickOpenNotebook,
 }) => {
   const [containerStyles, setContainerStyles] = useState<{
-    display: string;
-    top: number;
-    left: number;
+    display?: string;
+    top?: number;
+    left?: number;
   } | null>(null);
 
   const iconContainerRef = useRef<HTMLDivElement>(null);
-  console.log({ containerStyles });
 
   const icons = [
     {
@@ -40,16 +39,14 @@ const TextSelectionMenu = ({
     },
   ];
 
-  let startX: number, endX: number, startY: number, endY: number;
-
   useEffect(() => {
     document.addEventListener("mousedown", handleMouseDown);
-    document.addEventListener("mouseup", handleSelectionChange);
-    // document.addEventListener("keyup", handleSelectionChange);
+    document.addEventListener("mouseup", handleMouseUp);
+    // document.addEventListener("keyup", handleMouseUp);
 
     return () => {
       document.addEventListener("mousedown", handleMouseDown);
-      document.removeEventListener("mouseup", handleSelectionChange);
+      document.removeEventListener("mouseup", handleMouseUp);
       //   document.removeEventListener("keyup", handleSelectionChange);
     };
   });
@@ -58,23 +55,12 @@ const TextSelectionMenu = ({
     if (iconContainerRef.current?.contains(e.target as Node)) {
       return;
     }
-
-    startX = e.pageX;
-    startY = e.pageY;
-
-    console.log({ startX, startY });
   };
 
-  const handleMouseUp = (e: MouseEvent) => {
-    endX = e.pageX;
-    endY = e.pageY;
-
-    console.log({ endX, endY });
-  };
   // offset parent is the closest ancestor element that is positioned
   const getSelectedTextOffsetParent = () => {
     const selection = window.getSelection();
-    const offsetParent = selection?.anchorNode.parentElement.offsetParent;
+    const offsetParent = selection?.anchorNode?.parentElement?.offsetParent;
 
     return offsetParent;
   };
@@ -87,15 +73,35 @@ const TextSelectionMenu = ({
     return rect;
   };
 
-  const handleSelectionChange = (e: MouseEvent) => {
+  const checkHasSelection = () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const selection = window.getSelection();
+        if (selection?.toString()) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  };
+
+  const handleMouseUp = async (e: MouseEvent) => {
     if (iconContainerRef.current?.contains(e.target as Node)) {
       return;
     }
+
+    const hasSelection = await checkHasSelection();
+    if (!hasSelection) {
+      setContainerStyles({ display: "none" });
+      return;
+    }
+
+    const selection = window.getSelection();
     const parent = getSelectedTextOffsetParent();
     const parentRect = parent?.getBoundingClientRect();
     const { top, left } = parentRect || {};
 
-    const selection = window.getSelection();
     const range = selection?.getRangeAt(0);
 
     const rect = getSelectedTextBoundaryRect();
@@ -112,20 +118,28 @@ const TextSelectionMenu = ({
     setContainerStyles(styles);
   };
 
-  return ReactDOM.createPortal(
-    <div
-      className={classes.container}
-      style={containerStyles}
-      ref={iconContainerRef}
-    >
-      {icons.map((icon, index) => (
-        <div key={index} className={icon.classes} onClick={icon.onClickHandler}>
-          {icon.comp}
-        </div>
-      ))}
-    </div>,
-    getSelectedTextOffsetParent()
-  );
+  const offsetParent = getSelectedTextOffsetParent();
+
+  return offsetParent
+    ? ReactDOM.createPortal(
+        <div
+          className={classes.container}
+          style={containerStyles}
+          ref={iconContainerRef}
+        >
+          {icons.map((icon, index) => (
+            <div
+              key={index}
+              className={icon.classes}
+              onClick={icon.onClickHandler}
+            >
+              {icon.comp}
+            </div>
+          ))}
+        </div>,
+        offsetParent
+      )
+    : null;
 };
 
 export default TextSelectionMenu;

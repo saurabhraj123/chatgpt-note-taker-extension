@@ -10,8 +10,6 @@ const App: React.FC<{}> = () => {
   );
 };
 
-console.log("main to chal gy");
-
 const container = document.createElement("div");
 document.body.appendChild(container);
 const root = createRoot(container);

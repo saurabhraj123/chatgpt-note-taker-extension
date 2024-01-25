@@ -18,7 +18,6 @@ const App: React.FC<{}> = () => {
   });
 
   const handleClickCopy = (e: MouseEvent) => {
-    console.log("Copy");
     e.stopPropagation();
   };
 
