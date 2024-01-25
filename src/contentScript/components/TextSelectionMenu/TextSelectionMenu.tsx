@@ -7,6 +7,13 @@ import { HiOutlineBookOpen } from "react-icons/hi";
 
 /** Internal */
 import classes from "./TextSelectionMenu.module.css";
+import {
+  getParentRect,
+  getSelectionMenuStyles,
+  getSelectedTextOffsetParent,
+  getSelectedTextBoundaryRect,
+  checkShouldHideSelectionMenu,
+} from "../../modules/utils";
 
 const TextSelectionMenu = ({
   onClickCopy,
@@ -19,7 +26,16 @@ const TextSelectionMenu = ({
     left?: number;
   } | null>(null);
 
+  useEffect(() => {
+    document.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, []);
+
   const iconContainerRef = useRef<HTMLDivElement>(null);
+  const offsetParent = getSelectedTextOffsetParent();
 
   const icons = [
     {
@@ -39,106 +55,50 @@ const TextSelectionMenu = ({
     },
   ];
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleMouseDown);
-    document.addEventListener("mouseup", handleMouseUp);
-    // document.addEventListener("keyup", handleMouseUp);
-
-    return () => {
-      document.addEventListener("mousedown", handleMouseDown);
-      document.removeEventListener("mouseup", handleMouseUp);
-      //   document.removeEventListener("keyup", handleSelectionChange);
-    };
-  });
-
-  const handleMouseDown = (e: MouseEvent) => {
-    if (iconContainerRef.current?.contains(e.target as Node)) {
-      return;
-    }
+  const isSelectionMenuContainerClick = (e: MouseEvent) => {
+    return iconContainerRef.current?.contains(e.target as Node);
   };
 
-  // offset parent is the closest ancestor element that is positioned
-  const getSelectedTextOffsetParent = () => {
-    const selection = window.getSelection();
-    const offsetParent = selection?.anchorNode?.parentElement?.offsetParent;
-
-    return offsetParent;
+  const hideSelectionMenu = () => {
+    setContainerStyles({ display: "none" });
   };
 
-  const getSelectedTextBoundaryRect = () => {
-    const selection = window.getSelection();
-    const range = selection?.getRangeAt(0);
-    const rect = range?.getBoundingClientRect();
+  const showSelectionMenu = () => {
+    const parentRect = getParentRect();
+    const selectedTextRect = getSelectedTextBoundaryRect();
 
-    return rect;
-  };
-
-  const checkHasSelection = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const selection = window.getSelection();
-        if (selection?.toString()) {
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      });
-    });
-  };
-
-  const handleMouseUp = async (e: MouseEvent) => {
-    if (iconContainerRef.current?.contains(e.target as Node)) {
-      return;
-    }
-
-    const hasSelection = await checkHasSelection();
-    if (!hasSelection) {
-      setContainerStyles({ display: "none" });
-      return;
-    }
-
-    const selection = window.getSelection();
-    const parent = getSelectedTextOffsetParent();
-    const parentRect = parent?.getBoundingClientRect();
-    const { top, left } = parentRect || {};
-
-    const range = selection?.getRangeAt(0);
-
-    const rect = getSelectedTextBoundaryRect();
-
-    const selectedTextTop = rect?.top;
-    const selectedTextLeft = rect?.left;
-
-    const styles = {
-      display: "flex",
-      top: selectedTextTop - top - 20 - 19, // selcted text top - parent top - rect.height - 17
-      left: selectedTextLeft - left,
-    };
-
+    const styles = getSelectionMenuStyles(parentRect, selectedTextRect);
     setContainerStyles(styles);
   };
 
-  const offsetParent = getSelectedTextOffsetParent();
+  const handleMouseUp = async (e: MouseEvent) => {
+    if (isSelectionMenuContainerClick(e)) return;
+
+    const shouldHideSelectionMenu = await checkShouldHideSelectionMenu();
+    if (shouldHideSelectionMenu) {
+      hideSelectionMenu();
+      return;
+    }
+
+    showSelectionMenu();
+  };
+
+  const selectionMenuElement = (
+    <div
+      className={classes.container}
+      style={containerStyles}
+      ref={iconContainerRef}
+    >
+      {icons.map((icon, index) => (
+        <div key={index} className={icon.classes} onClick={icon.onClickHandler}>
+          {icon.comp}
+        </div>
+      ))}
+    </div>
+  );
 
   return offsetParent
-    ? ReactDOM.createPortal(
-        <div
-          className={classes.container}
-          style={containerStyles}
-          ref={iconContainerRef}
-        >
-          {icons.map((icon, index) => (
-            <div
-              key={index}
-              className={icon.classes}
-              onClick={icon.onClickHandler}
-            >
-              {icon.comp}
-            </div>
-          ))}
-        </div>,
-        offsetParent
-      )
+    ? ReactDOM.createPortal(selectionMenuElement, offsetParent)
     : null;
 };
 
