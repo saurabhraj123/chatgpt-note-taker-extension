@@ -35,6 +35,7 @@ const TextSelectionMenu = ({
   }, []);
 
   const iconContainerRef = useRef<HTMLDivElement>(null);
+  const selectedTextRef = useRef(null);
   const offsetParent = getSelectedTextOffsetParent();
 
   const icons = [
@@ -63,20 +64,51 @@ const TextSelectionMenu = ({
     setContainerStyles({ display: "none" });
   };
 
+  const saveSelection = () => {
+    const selection = window.getSelection();
+    if (selection && !selection.isCollapsed) {
+      selectedTextRef.current = {
+        text: selection.toString(),
+        range: selection.getRangeAt(0),
+        anchorNode: selection.anchorNode,
+        focusNode: selection.focusNode,
+      };
+    }
+  };
+
+  const resetSavedSelection = () => {
+    selectedTextRef.current = null;
+  };
+
   const showSelectionMenu = () => {
     const parentRect = getParentRect();
     const selectedTextRect = getSelectedTextBoundaryRect();
 
     const styles = getSelectionMenuStyles(parentRect, selectedTextRect);
     setContainerStyles(styles);
+
+    saveSelection();
+  };
+
+  const applySavedSelection = () => {
+    const savedSelection = selectedTextRef.current;
+    if (savedSelection) {
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(savedSelection.range);
+    }
   };
 
   const handleMouseUp = async (e: MouseEvent) => {
-    if (isSelectionMenuContainerClick(e)) return;
+    if (isSelectionMenuContainerClick(e)) {
+      applySavedSelection();
+      return;
+    }
 
     const shouldHideSelectionMenu = await checkShouldHideSelectionMenu();
     if (shouldHideSelectionMenu) {
       hideSelectionMenu();
+      resetSavedSelection();
       return;
     }
 
