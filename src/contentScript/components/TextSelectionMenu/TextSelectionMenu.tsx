@@ -5,6 +5,7 @@ import { FiCopy } from "react-icons/fi";
 import { TbFileImport } from "react-icons/tb";
 import { HiOutlineBookOpen } from "react-icons/hi";
 import { TiTick } from "react-icons/ti";
+import { BsReply } from "react-icons/bs";
 
 /** Internal */
 import classes from "./TextSelectionMenu.module.css";
@@ -50,28 +51,6 @@ const TextSelectionMenu = ({
     }, 2000);
   };
 
-  const icons = [
-    {
-      comp: isCopyIconClicked ? <TiTick /> : <FiCopy />,
-      classes: classes.icon,
-      onClickHandler: handleClickCopy,
-    },
-    {
-      comp: <TbFileImport />,
-      classes: classes.icon,
-      onClickHandler: onClickImport,
-    },
-    {
-      comp: <HiOutlineBookOpen />,
-      classes: classes.icon,
-      onClickHandler: onClickOpenNotebook,
-    },
-  ];
-
-  const isSelectionMenuContainerClick = (e: MouseEvent) => {
-    return iconContainerRef.current?.contains(e.target as Node);
-  };
-
   const hideSelectionMenu = () => {
     setContainerStyles({ display: "none" });
   };
@@ -90,6 +69,29 @@ const TextSelectionMenu = ({
 
   const resetSavedSelection = () => {
     selectedTextRef.current = null;
+  };
+
+  const focusTextArea = () => {
+    document.querySelector("textarea").focus();
+  };
+
+  const handleClickReply = () => {
+    const selectedText = selectedTextRef.current.text;
+
+    const textarea = document.querySelector("textarea");
+    textarea.value = selectedText;
+
+    hideSelectionMenu();
+    resetSavedSelection();
+    focusTextArea();
+
+    // Trigger input event to mimic user keyboard input
+    const inputEvent = new Event("input", { bubbles: true });
+    textarea.dispatchEvent(inputEvent);
+  };
+
+  const isSelectionMenuContainerClick = (e: MouseEvent) => {
+    return iconContainerRef.current?.contains(e.target as Node);
   };
 
   const showSelectionMenu = () => {
@@ -119,6 +121,8 @@ const TextSelectionMenu = ({
 
     const shouldHideSelectionMenu = await checkShouldHideSelectionMenu();
     if (shouldHideSelectionMenu) {
+      if (!selectedTextRef.current) return;
+
       hideSelectionMenu();
       resetSavedSelection();
       return;
@@ -126,6 +130,29 @@ const TextSelectionMenu = ({
 
     showSelectionMenu();
   };
+
+  const icons = [
+    {
+      comp: isCopyIconClicked ? <TiTick /> : <FiCopy />,
+      classes: classes.icon,
+      onClickHandler: handleClickCopy,
+    },
+    {
+      comp: <BsReply />,
+      classes: classes.icon,
+      onClickHandler: handleClickReply,
+    },
+    {
+      comp: <TbFileImport />,
+      classes: classes.icon,
+      onClickHandler: onClickImport,
+    },
+    {
+      comp: <HiOutlineBookOpen />,
+      classes: classes.icon,
+      onClickHandler: onClickOpenNotebook,
+    },
+  ];
 
   const selectionMenuElement = (
     <div
