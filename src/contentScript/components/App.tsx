@@ -17,8 +17,8 @@ const App: React.FC<{}> = () => {
     [classes.containerExpanded]: isEditorExpanded,
   });
 
-  const handleClickCopy = (e: MouseEvent) => {
-    e.stopPropagation();
+  const handleClickCopy = (selectedText: string) => {
+    navigator.clipboard.writeText(selectedText);
   };
 
   return (

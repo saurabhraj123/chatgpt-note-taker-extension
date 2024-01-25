@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import { FiCopy } from "react-icons/fi";
 import { TbFileImport } from "react-icons/tb";
 import { HiOutlineBookOpen } from "react-icons/hi";
+import { TiTick } from "react-icons/ti";
 
 /** Internal */
 import classes from "./TextSelectionMenu.module.css";
@@ -25,6 +26,7 @@ const TextSelectionMenu = ({
     top?: number;
     left?: number;
   } | null>(null);
+  const [isCopyIconClicked, setIsCopyIconClicked] = useState(false);
 
   useEffect(() => {
     document.addEventListener("mouseup", handleMouseUp);
@@ -38,11 +40,21 @@ const TextSelectionMenu = ({
   const selectedTextRef = useRef(null);
   const offsetParent = getSelectedTextOffsetParent();
 
+  const handleClickCopy = (e: MouseEvent) => {
+    const selectedText = selectedTextRef.current.text;
+    onClickCopy(selectedText);
+    setIsCopyIconClicked(true);
+
+    setTimeout(() => {
+      setIsCopyIconClicked(false);
+    }, 2000);
+  };
+
   const icons = [
     {
-      comp: <FiCopy />,
+      comp: isCopyIconClicked ? <TiTick /> : <FiCopy />,
       classes: classes.icon,
-      onClickHandler: onClickCopy,
+      onClickHandler: handleClickCopy,
     },
     {
       comp: <TbFileImport />,
