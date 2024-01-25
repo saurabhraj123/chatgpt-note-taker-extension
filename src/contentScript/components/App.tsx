@@ -17,8 +17,23 @@ const App: React.FC<{}> = () => {
     [classes.containerExpanded]: isEditorExpanded,
   });
 
+  const focusTextArea = () => {
+    document.querySelector("textarea").focus();
+  };
+
   const handleClickCopy = (selectedText: string) => {
     navigator.clipboard.writeText(selectedText);
+  };
+
+  const handleClickReply = (selectedText: string) => {
+    const textarea = document.querySelector("textarea");
+    textarea.value = selectedText;
+
+    focusTextArea();
+
+    // Trigger input event to mimic user keyboard input
+    const inputEvent = new Event("input", { bubbles: true });
+    textarea.dispatchEvent(inputEvent);
   };
 
   return (
@@ -31,6 +46,7 @@ const App: React.FC<{}> = () => {
 
       <TextSelectionMenu
         onClickCopy={handleClickCopy}
+        onClickReply={handleClickReply}
         onClickImport={() => {}}
         onClickOpenNotebook={() => {}}
       />

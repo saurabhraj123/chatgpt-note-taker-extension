@@ -19,6 +19,7 @@ import {
 
 const TextSelectionMenu = ({
   onClickCopy,
+  onClickReply,
   onClickImport,
   onClickOpenNotebook,
 }) => {
@@ -76,23 +77,12 @@ const TextSelectionMenu = ({
     selectedTextRef.current = null;
   };
 
-  const focusTextArea = () => {
-    document.querySelector("textarea").focus();
-  };
-
   const handleClickReply = () => {
-    const selectedText = getSelectedText();
-
-    const textarea = document.querySelector("textarea");
-    textarea.value = selectedText;
-
     hideSelectionMenu();
     resetSavedSelection();
-    focusTextArea();
 
-    // Trigger input event to mimic user keyboard input
-    const inputEvent = new Event("input", { bubbles: true });
-    textarea.dispatchEvent(inputEvent);
+    const selectedText = getSelectedText();
+    onClickReply(selectedText);
   };
 
   const isSelectionMenuContainerClick = (e: MouseEvent) => {
