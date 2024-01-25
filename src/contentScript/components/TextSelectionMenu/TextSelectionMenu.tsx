@@ -41,8 +41,13 @@ const TextSelectionMenu = ({
   const selectedTextRef = useRef(null);
   const offsetParent = getSelectedTextOffsetParent();
 
+  const getSelectedText = () => {
+    const selection = window.getSelection();
+    return selection.toString().trim();
+  };
+
   const handleClickCopy = (e: MouseEvent) => {
-    const selectedText = selectedTextRef.current.text;
+    const selectedText = getSelectedText();
     onClickCopy(selectedText);
     setIsCopyIconClicked(true);
 
@@ -76,7 +81,7 @@ const TextSelectionMenu = ({
   };
 
   const handleClickReply = () => {
-    const selectedText = selectedTextRef.current.text;
+    const selectedText = getSelectedText();
 
     const textarea = document.querySelector("textarea");
     textarea.value = selectedText;
