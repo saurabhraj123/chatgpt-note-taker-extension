@@ -18,12 +18,3 @@
 .containerExpanded {
   transform: translateX(-1 * var(--container-width));
 }
-
-.toggleIcon {
-  border: 1px solid black;
-  position: absolute;
-  right: 102%;
-  top: 49%;
-  background: red;
-  cursor: pointer;
-}

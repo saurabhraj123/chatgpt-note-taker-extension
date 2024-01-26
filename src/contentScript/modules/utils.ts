@@ -49,3 +49,7 @@ export const getParentRect = () => {
   const parentRect = parent.getBoundingClientRect();
   return parentRect;
 };
+
+export const getExpandButtonStyles = (direction: number) => {
+  return { tranform: "translateY(0.15rem) rotate(0deg) translateZ(0px);" };
+};

@@ -3,11 +3,12 @@ import React, { useState } from "react";
 import classNames from "classnames";
 
 /** Internal */
-import TextSelectionMenu from "./TextSelectionMenu/TextSelectionMenu";
 import classes from "./App.module.css";
+import ArrowButton from "./ExpandButton/ArrowButton";
+import TextSelectionMenu from "./TextSelectionMenu/TextSelectionMenu";
 
 const App: React.FC<{}> = () => {
-  const [isEditorExpanded, setIsEditorExpanded] = useState<Boolean>(false);
+  const [isEditorExpanded, setIsEditorExpanded] = useState<boolean>(false);
 
   const toggleEditorVisibility = () => {
     setIsEditorExpanded(!isEditorExpanded);
@@ -39,9 +40,11 @@ const App: React.FC<{}> = () => {
   return (
     <>
       <div className={containerClasses}>
-        <div className={classes.toggleIcon} onClick={toggleEditorVisibility}>
-          {isEditorExpanded ? "Close" : "Open"}
-        </div>
+        <ArrowButton
+          position="right"
+          isOpen={isEditorExpanded}
+          onClick={toggleEditorVisibility}
+        />
       </div>
 
       <TextSelectionMenu
