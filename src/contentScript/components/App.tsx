@@ -3,19 +3,20 @@ import React, { useState } from "react";
 import classNames from "classnames";
 
 /** Internal */
+import Editor from "./Editor";
 import classes from "./App.module.css";
 import ArrowButton from "./ExpandButton/ArrowButton";
 import TextSelectionMenu from "./TextSelectionMenu/TextSelectionMenu";
 
 const App: React.FC<{}> = () => {
-  const [isEditorExpanded, setIsEditorExpanded] = useState<boolean>(false);
+  const [isEditorVisible, setIsEditorVisible] = useState<boolean>(false);
 
   const toggleEditorVisibility = () => {
-    setIsEditorExpanded(!isEditorExpanded);
+    setIsEditorVisible(!isEditorVisible);
   };
 
-  const containerClasses = classNames(classes.container, {
-    [classes.containerExpanded]: isEditorExpanded,
+  const editorClasses = classNames(classes.editorContainer, {
+    [classes.showEditor]: isEditorVisible,
   });
 
   const focusTextArea = () => {
@@ -39,10 +40,11 @@ const App: React.FC<{}> = () => {
 
   return (
     <>
-      <div className={containerClasses}>
+      <div className={editorClasses}>
+        <Editor />
         <ArrowButton
           position="right"
-          isOpen={isEditorExpanded}
+          isOpen={isEditorVisible}
           onClick={toggleEditorVisibility}
         />
       </div>

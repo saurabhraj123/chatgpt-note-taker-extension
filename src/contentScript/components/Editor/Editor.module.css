@@ -1,0 +1,15 @@
+.container {
+  padding: 12px;
+}
+
+.header {
+  padding: 0 0 16px 68px;
+  font-size: 24px;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.editorjs {
+  display: flex;
+  padding-left: 68px;
+}
