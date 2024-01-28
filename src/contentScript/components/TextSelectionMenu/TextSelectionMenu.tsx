@@ -6,6 +6,7 @@ import { TbFileImport } from "react-icons/tb";
 import { HiOutlineBookOpen } from "react-icons/hi";
 import { TiTick } from "react-icons/ti";
 import { BsReply } from "react-icons/bs";
+import { LuImport } from "react-icons/lu";
 
 /** Internal */
 import classes from "./TextSelectionMenu.module.css";
@@ -15,12 +16,14 @@ import {
   getSelectedTextOffsetParent,
   getSelectedTextBoundaryRect,
   checkShouldHideSelectionMenu,
+  getQuestionForSelectedText,
 } from "../../modules/utils";
 
 const TextSelectionMenu = ({
   onClickCopy,
   onClickReply,
   onClickImport,
+  onClickImportWithQuestion,
   onClickOpenNotebook,
 }) => {
   const [containerStyles, setContainerStyles] = useState<{
@@ -126,6 +129,29 @@ const TextSelectionMenu = ({
     showSelectionMenu();
   };
 
+  const handleClickImport = () => {
+    hideSelectionMenu();
+    resetSavedSelection();
+
+    const selectedText = getSelectedText();
+    onClickImport(selectedText);
+  };
+
+  const handleClickImportWithQuestion = () => {
+    hideSelectionMenu();
+    resetSavedSelection();
+
+    const selection = window.getSelection();
+    const selectedText = selection.toString().trim();
+
+    const parentContainerELement = selection.anchorNode
+      .parentElement as HTMLElement;
+
+    const questionText = getQuestionForSelectedText(parentContainerELement);
+
+    onClickImportWithQuestion(questionText, selectedText);
+  };
+
   const icons = [
     {
       comp: isCopyIconClicked ? <TiTick /> : <FiCopy />,
@@ -138,9 +164,14 @@ const TextSelectionMenu = ({
       onClickHandler: handleClickReply,
     },
     {
+      comp: <LuImport />,
+      classes: classes.icon,
+      onClickHandler: handleClickImportWithQuestion,
+    },
+    {
       comp: <TbFileImport />,
       classes: classes.icon,
-      onClickHandler: onClickImport,
+      onClickHandler: handleClickImport,
     },
     {
       comp: <HiOutlineBookOpen />,

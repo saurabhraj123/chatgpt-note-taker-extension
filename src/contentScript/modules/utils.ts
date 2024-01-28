@@ -1,3 +1,10 @@
+/** External */
+import EditorJS from "@editorjs/editorjs";
+import Header from "@editorjs/header";
+import NestedList from "@editorjs/nested-list";
+import CodeTool from "@editorjs/code";
+import InlineCode from "@editorjs/inline-code";
+
 export const checkHasSelection = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -52,4 +59,84 @@ export const getParentRect = () => {
 
 export const getExpandButtonStyles = (direction: number) => {
   return { tranform: "translateY(0.15rem) rotate(0deg) translateZ(0px);" };
+};
+
+export const getEditorInstance = () => {
+  return new EditorJS({
+    holder: "editorjs",
+    tools: {
+      header: Header,
+      list: {
+        class: NestedList,
+        inlineToolbar: true,
+        config: {
+          defaultStyle: "unordered",
+        },
+      },
+      code: CodeTool,
+      inlineCode: {
+        class: InlineCode,
+        shortcut: "CMD+SHIFT+M",
+      },
+    },
+    placeholder: "Let's remember only what's important",
+  });
+};
+
+export const findParentConversationBlock = (currentElement: HTMLElement) => {
+  if (!currentElement) return null;
+
+  const targetAttribute = "data-testid";
+  let element: HTMLElement | null = currentElement;
+  while (element && element.tagName !== "HTML") {
+    if (element.getAttribute(targetAttribute) !== null) {
+      return element;
+    }
+    element = element.parentElement;
+  }
+
+  return null;
+};
+
+export const getQuestionForSelectedText = (currentElement: HTMLElement) => {
+  const answerElement = findParentConversationBlock(currentElement);
+  if (!answerElement) return null;
+
+  let questionElement = answerElement.previousElementSibling;
+
+  const questionConversationDiv = questionElement?.querySelector(
+    "div[data-message-author-role]"
+  );
+
+  const questionAuthorRole = questionConversationDiv?.getAttribute(
+    "data-message-author-role"
+  );
+
+  if (questionAuthorRole === "user") return questionConversationDiv.textContent;
+
+  return null;
+};
+
+export const importParagraphAtTheEnd = (text: string, editor: EditorJS) => {
+  let indexToInsertAt = editor.blocks.getBlocksCount() - 1;
+  editor.blocks.insert(
+    "paragraph",
+    { text: text.trim() },
+    null,
+    indexToInsertAt
+  );
+};
+
+export const importHeadingAtTheEnd = (
+  text: string,
+  editor: EditorJS,
+  level: number = 2
+) => {
+  let indexToInsertAt = editor.blocks.getBlocksCount() - 1;
+  editor.blocks.insert(
+    "header",
+    { text: text.trim(), level },
+    null,
+    indexToInsertAt
+  );
 };
