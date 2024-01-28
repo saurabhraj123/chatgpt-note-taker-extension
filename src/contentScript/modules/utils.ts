@@ -127,15 +127,17 @@ export const importParagraphAtTheEnd = (text: string, editor: EditorJS) => {
   );
 };
 
-export const importHeadingAtTheEnd = (
+export const importQuestionAtTheEnd = (
   text: string,
   editor: EditorJS,
-  level: number = 2
+  level: number = 4
 ) => {
   let indexToInsertAt = editor.blocks.getBlocksCount() - 1;
+
+  const questionText = `<b>${text.trim()}</b>`;
   editor.blocks.insert(
     "header",
-    { text: text.trim(), level },
+    { text: questionText, level },
     null,
     indexToInsertAt
   );

@@ -9,7 +9,7 @@ import ArrowButton from "./ExpandButton/ArrowButton";
 import TextSelectionMenu from "./TextSelectionMenu/TextSelectionMenu";
 import {
   importParagraphAtTheEnd,
-  importHeadingAtTheEnd,
+  importQuestionAtTheEnd,
 } from "../modules/utils";
 
 const App: React.FC<{}> = () => {
@@ -53,7 +53,7 @@ const App: React.FC<{}> = () => {
     questionText: string,
     selectedText: string
   ) => {
-    if (questionText) importHeadingAtTheEnd(questionText, editorRef.current);
+    if (questionText) importQuestionAtTheEnd(questionText, editorRef.current);
     importParagraphAtTheEnd(selectedText, editorRef.current);
     setIsEditorVisible(true);
   };
