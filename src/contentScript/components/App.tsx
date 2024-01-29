@@ -1,5 +1,5 @@
 /** External */
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import classNames from "classnames";
 
 /** Internal */
@@ -16,6 +16,26 @@ const App: React.FC<{}> = () => {
   const [isEditorVisible, setIsEditorVisible] = useState<boolean>(false);
 
   const editorRef = useRef(null);
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isEditorVisible]);
+
+  const checkIsClickOutsideEditor = (event: MouseEvent) => {
+    const clientX = event.clientX;
+    const editorStartsAt = window.innerWidth * 0.28;
+
+    return clientX < editorStartsAt;
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    const isClickOutsideEditor = checkIsClickOutsideEditor(event);
+    if (isClickOutsideEditor && isEditorVisible) setIsEditorVisible(false);
+  };
 
   const toggleEditorVisibility = () => {
     setIsEditorVisible(!isEditorVisible);
