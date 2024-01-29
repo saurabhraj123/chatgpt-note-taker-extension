@@ -142,3 +142,7 @@ export const importQuestionAtTheEnd = (
     indexToInsertAt
   );
 };
+
+export const checkIfCtrlOrCmdHeldWithClick = (event: MouseEvent) => {
+  return event.ctrlKey || event.metaKey;
+};

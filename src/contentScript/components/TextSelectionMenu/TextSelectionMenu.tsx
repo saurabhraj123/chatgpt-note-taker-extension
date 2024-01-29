@@ -140,7 +140,7 @@ const TextSelectionMenu = ({
     resetSavedSelection();
 
     const selectedText = getSelectedText();
-    onClickImport(selectedText);
+    onClickImport(selectedText, event);
   };
 
   const handleClickImportWithQuestion = (event: MouseEvent) => {
@@ -157,7 +157,7 @@ const TextSelectionMenu = ({
 
     const questionText = getQuestionForSelectedText(parentContainerELement);
 
-    onClickImportWithQuestion(questionText, selectedText);
+    onClickImportWithQuestion(questionText, selectedText, event);
   };
 
   const icons = [

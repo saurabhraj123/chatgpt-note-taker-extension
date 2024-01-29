@@ -10,6 +10,7 @@ import TextSelectionMenu from "./TextSelectionMenu/TextSelectionMenu";
 import {
   importParagraphAtTheEnd,
   importQuestionAtTheEnd,
+  checkIfCtrlOrCmdHeldWithClick,
 } from "../modules/utils";
 
 const customStyles = {
@@ -72,18 +73,23 @@ const App: React.FC<{}> = () => {
     textarea.dispatchEvent(inputEvent);
   };
 
-  const handleClickImport = (selectedText: string) => {
+  const handleClickImport = (selectedText: string, event: MouseEvent) => {
     importParagraphAtTheEnd(selectedText, editorRef.current);
-    setIsEditorVisible(true);
+
+    const isCtrlOrCmdKeyHeld = checkIfCtrlOrCmdHeldWithClick(event);
+    if (isCtrlOrCmdKeyHeld) setIsEditorVisible(true);
   };
 
   const handleClickImportWithQuestion = (
     questionText: string,
-    selectedText: string
+    selectedText: string,
+    event: MouseEvent
   ) => {
     if (questionText) importQuestionAtTheEnd(questionText, editorRef.current);
     importParagraphAtTheEnd(selectedText, editorRef.current);
-    setIsEditorVisible(true);
+
+    const isCtrlOrCmdKeyHeld = checkIfCtrlOrCmdHeldWithClick(event);
+    if (isCtrlOrCmdKeyHeld) setIsEditorVisible(true);
   };
 
   const getEditorStyles = () => {
