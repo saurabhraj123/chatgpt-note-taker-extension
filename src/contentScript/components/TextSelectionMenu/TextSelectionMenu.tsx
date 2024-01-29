@@ -51,6 +51,8 @@ const TextSelectionMenu = ({
   };
 
   const handleClickCopy = (e: MouseEvent) => {
+    e.stopPropagation();
+
     const selectedText = getSelectedText();
     onClickCopy(selectedText);
     setIsCopyIconClicked(true);
@@ -80,7 +82,9 @@ const TextSelectionMenu = ({
     selectedTextRef.current = null;
   };
 
-  const handleClickReply = () => {
+  const handleClickReply = (event: MouseEvent) => {
+    event.stopPropagation();
+
     hideSelectionMenu();
     resetSavedSelection();
 
@@ -129,7 +133,9 @@ const TextSelectionMenu = ({
     showSelectionMenu();
   };
 
-  const handleClickImport = () => {
+  const handleClickImport = (event: MouseEvent) => {
+    event.stopPropagation();
+
     hideSelectionMenu();
     resetSavedSelection();
 
@@ -137,7 +143,9 @@ const TextSelectionMenu = ({
     onClickImport(selectedText);
   };
 
-  const handleClickImportWithQuestion = () => {
+  const handleClickImportWithQuestion = (event: MouseEvent) => {
+    event.stopPropagation();
+
     hideSelectionMenu();
     resetSavedSelection();
 

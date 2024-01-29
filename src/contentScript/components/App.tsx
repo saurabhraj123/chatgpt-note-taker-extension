@@ -12,16 +12,11 @@ import {
   importQuestionAtTheEnd,
 } from "../modules/utils";
 
-const customStyles = {
-  arrowButton: {
-    right: "101.5%",
-  },
-};
-
 const App: React.FC<{}> = () => {
   const [isEditorVisible, setIsEditorVisible] = useState<boolean>(false);
 
   const editorRef = useRef(null);
+  const editorContainerRef = useRef(null);
 
   useEffect(() => {
     document.addEventListener("click", handleClickOutside);
@@ -33,7 +28,8 @@ const App: React.FC<{}> = () => {
 
   const checkIsClickOutsideEditor = (event: MouseEvent) => {
     const clientX = event.clientX;
-    const editorStartsAt = window.innerWidth * 0.28;
+    const editorStartsAt =
+      window.innerWidth - (editorContainerRef.current?.clientWidth || 0);
 
     return clientX < editorStartsAt;
   };
@@ -87,10 +83,11 @@ const App: React.FC<{}> = () => {
   return (
     <>
       <div className={editorClasses}>
-        <Editor editorRef={editorRef} />
+        <div ref={editorContainerRef}>
+          <Editor editorRef={editorRef} />
+        </div>
         <ArrowButton
           position="right"
-          customStyles={isEditorVisible ? customStyles.arrowButton : null}
           isOpen={isEditorVisible}
           onClick={toggleEditorVisibility}
         />
