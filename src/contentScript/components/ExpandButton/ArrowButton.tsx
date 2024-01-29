@@ -6,9 +6,15 @@ interface ArrowProps {
   position: "left" | "right";
   isOpen: boolean;
   onClick: () => void;
+  customStyles?: { [key: string]: string };
 }
 
-const ArrowButton = ({ position, isOpen, onClick }: ArrowProps) => {
+const ArrowButton = ({
+  position,
+  isOpen,
+  onClick,
+  customStyles,
+}: ArrowProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const upperLineClasses = classNames(classes.line, classes.upperLine, {
@@ -36,6 +42,7 @@ const ArrowButton = ({ position, isOpen, onClick }: ArrowProps) => {
   return (
     <div
       className={classes.container}
+      style={customStyles}
       onClick={onClick}
       onMouseOver={handleMouseOver}
       onMouseLeave={handleMouseLeave}

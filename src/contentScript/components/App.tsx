@@ -12,6 +12,12 @@ import {
   importQuestionAtTheEnd,
 } from "../modules/utils";
 
+const customStyles = {
+  arrowButton: {
+    right: "101.5%",
+  },
+};
+
 const App: React.FC<{}> = () => {
   const [isEditorVisible, setIsEditorVisible] = useState<boolean>(false);
 
@@ -84,6 +90,7 @@ const App: React.FC<{}> = () => {
         <Editor editorRef={editorRef} />
         <ArrowButton
           position="right"
+          customStyles={isEditorVisible ? customStyles.arrowButton : null}
           isOpen={isEditorVisible}
           onClick={toggleEditorVisibility}
         />
