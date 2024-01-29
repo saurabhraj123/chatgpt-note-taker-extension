@@ -12,6 +12,12 @@ import {
   importQuestionAtTheEnd,
 } from "../modules/utils";
 
+const customStyles = {
+  editorContainer: {
+    boxShadow: "unset",
+  },
+};
+
 const App: React.FC<{}> = () => {
   const [isEditorVisible, setIsEditorVisible] = useState<boolean>(false);
 
@@ -80,9 +86,13 @@ const App: React.FC<{}> = () => {
     setIsEditorVisible(true);
   };
 
+  const getEditorStyles = () => {
+    return !isEditorVisible ? customStyles.editorContainer : null;
+  };
+
   return (
     <>
-      <div className={editorClasses}>
+      <div className={editorClasses} style={getEditorStyles()}>
         <div ref={editorContainerRef}>
           <Editor editorRef={editorRef} />
         </div>

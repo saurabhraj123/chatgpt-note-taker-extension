@@ -1,5 +1,7 @@
 .container {
   padding: 12px;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .header {
