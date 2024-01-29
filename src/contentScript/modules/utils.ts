@@ -146,3 +146,13 @@ export const importQuestionAtTheEnd = (
 export const checkIfCtrlOrCmdHeldWithClick = (event: MouseEvent) => {
   return event.ctrlKey || event.metaKey;
 };
+
+export const checkIfSelectionInConversationSection = () => {
+  const mainSection = document.querySelector(
+    "div[role='presentation']"
+  )?.firstElementChild;
+
+  const parentElement = getSelectedTextOffsetParent();
+
+  return mainSection.contains(parentElement);
+};

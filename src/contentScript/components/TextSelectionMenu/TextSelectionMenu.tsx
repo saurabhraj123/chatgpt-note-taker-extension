@@ -17,6 +17,7 @@ import {
   getSelectedTextBoundaryRect,
   checkShouldHideSelectionMenu,
   getQuestionForSelectedText,
+  checkIfSelectionInConversationSection,
 } from "../../modules/utils";
 
 const TextSelectionMenu = ({
@@ -97,6 +98,11 @@ const TextSelectionMenu = ({
   };
 
   const showSelectionMenu = () => {
+    const isSelectionInConversationSection =
+      checkIfSelectionInConversationSection();
+
+    if (!isSelectionInConversationSection) return;
+
     const parentRect = getParentRect();
     const selectedTextRect = getSelectedTextBoundaryRect();
 
