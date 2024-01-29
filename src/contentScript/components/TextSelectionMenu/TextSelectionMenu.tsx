@@ -133,6 +133,12 @@ const TextSelectionMenu = ({
     showSelectionMenu();
   };
 
+  const handleClickOpenNotebook: any = (event: MouseEvent) => {
+    event.stopPropagation();
+    hideSelectionMenu();
+    onClickOpenNotebook();
+  };
+
   const handleClickImport = (event: MouseEvent) => {
     event.stopPropagation();
 
@@ -184,7 +190,7 @@ const TextSelectionMenu = ({
     {
       comp: <HiOutlineBookOpen />,
       classes: classes.icon,
-      onClickHandler: onClickOpenNotebook,
+      onClickHandler: handleClickOpenNotebook,
     },
   ];
 
