@@ -104,17 +104,28 @@ export const getQuestionForSelectedText = (currentElement: HTMLElement) => {
 
   let questionElement = answerElement.previousElementSibling;
 
-  const questionConversationDiv = questionElement?.querySelector(
+  const questionConversationDivs = questionElement?.querySelectorAll(
     "div[data-message-author-role]"
   );
 
-  const questionAuthorRole = questionConversationDiv?.getAttribute(
+  if (!questionConversationDivs) return null;
+
+  // loop through each questionConversationDivs and check the role..if the role is user
+  // add it to the questionText and return it at the end
+
+  const questionAuthorRole = questionConversationDivs[0]?.getAttribute(
     "data-message-author-role"
   );
 
-  if (questionAuthorRole === "user") return questionConversationDiv.textContent;
+  if (questionAuthorRole !== "user") return null;
 
-  return null;
+  let questionText = "";
+  questionConversationDivs.forEach((questionConversationDiv) => {
+    const text = questionConversationDiv.textContent;
+    questionText += questionText === "" ? text : `<br><br>${text}`;
+  });
+
+  return questionText.trim();
 };
 
 export const importParagraphAtTheEnd = (text: string, editor: EditorJS) => {
