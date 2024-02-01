@@ -13,7 +13,10 @@ const Editor = ({ editorRef }) => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.header}>Notes</div>
+      <div className={classes.header}>
+        <div className={classes.title}>Notes</div>
+        <div className={classes.exportButton}>Export to PDF</div>
+      </div>
       <div id="editorjs" className={classes.editorjs} />
     </div>
   );

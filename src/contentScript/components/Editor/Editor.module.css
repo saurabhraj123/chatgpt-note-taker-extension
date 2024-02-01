@@ -5,10 +5,34 @@
 }
 
 .header {
-  padding: 0 0 16px 68px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 42px 16px 68px;
+}
+
+.title {
   font-size: 24px;
   text-decoration: underline;
   font-weight: bold;
+}
+
+.exportButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background-color: #da5050;
+  color: white;
+  cursor: pointer;
+}
+
+.exportButton:hover {
+  background-color: #c44a4a;
+}
+
+.exportButton:active {
+  background-color: #da5050;
 }
 
 .editorjs {
