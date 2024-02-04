@@ -48,7 +48,12 @@ const TextSelectionMenu = ({
 
   const getSelectedText = () => {
     const selection = window.getSelection();
-    return selection.toString().trim();
+
+    const range = selection.getRangeAt(0);
+    const container = document.createElement("div");
+    container.appendChild(range.cloneContents());
+
+    return container.innerHTML;
   };
 
   const handleClickCopy = (e: MouseEvent) => {

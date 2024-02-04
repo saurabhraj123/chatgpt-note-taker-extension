@@ -58,8 +58,15 @@ const App: React.FC<{}> = () => {
     document.querySelector("textarea").focus();
   };
 
-  const handleClickCopy = (selectedText: string) => {
-    navigator.clipboard.writeText(selectedText);
+  const handleClickCopy = async (selectedText: string) => {
+    await navigator.clipboard.write([
+      new ClipboardItem({
+        "text/plain": new Blob([selectedText], { type: "text/plain" }),
+        "text/html": new Blob([selectedText], {
+          type: "text/html",
+        }),
+      }),
+    ]);
   };
 
   const handleClickReply = (selectedText: string) => {
